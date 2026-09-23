@@ -22,6 +22,17 @@ A real-time web application that listens to a singer humming or singing and auto
 * **Canvas Pitch Trace**: 10-second rolling visualizer with gold emphasis on *Achala* (immovable) anchor swaras $S$ and $P$.
 * **Live Readout**: Displays the active swara name, deviation in cents, and Western note.
 
+### 4. 72 Melakarta Raga Database & Scale Matching Engine
+* **Complete 72 Melakarta Database**: Full matrix across 12 Chakras (*Indu* through *Aditya*), Katapayadi numbering, Suddha/Prati Madhyamam division, and exact swarasthanas.
+* **Real-Time Swara Accumulator**: Tracks sustained vocal swaras (dwell time) using RMS and clarity gating to discard brief glissandos or ambient noise.
+* **Scale Compatibility Scoring**: Live mathematical matching against all 72 Melakartas, penalizing sustained out-of-scale notes (*anyaswaras*) and ranking candidates by percentage.
+* **Disambiguation Guidance**: Identifies and recommends the specific swaras needed to differentiate between top matching candidates.
+### 5. Arohanam–Avarohanam Trajectory Runway & Tanpura Drone
+* **Vocal Note Event Segmentation**: Hysteresis-based note detector converting continuous singing pitch into discrete swaras with octave sthayi awareness ($S$ vs $\dot{S}$).
+* **Directional Scale Runway**: Visual 8-step ascent runway ($S \to R \to G \to M \to P \to D \to N \to \dot{S}$) and 8-step descent runway ($\dot{S} \to N \to D \to P \to M \to G \to R \to S$) with live pulsing cursors and step validation checkmarks.
+* **Accuracy Scoring & Skipped Note Detection**: Real-time evaluation calculating overall accuracy score, flagging skipped notes, and applying *Anyaswara* penalties.
+* **Built-in Web Audio Tanpura Drone**: Synthesized 4-string Carnatic Tanpura ($Pa - Sa - Sa - \underset{\cdot}{Sa}$) with rich overtones and *javari* shimmer tuned to your calibrated $Sa$.
+
 ---
 
 ## 🚀 Getting Started
@@ -57,11 +68,12 @@ npm run build
 - [x] **Step 1**: Microphone capture and 60 FPS live continuous pitch visualizer.
 - [x] **Step 2**: Manual & auto "Sa" tonic calibration.
 - [x] **Step 3**: Real-time Swara mapping and canvas swara overlays.
-- [ ] **Step 4**: 72 Melakarta raga database & scale matching engine.
-- [ ] **Step 5**: Arohanam–Avarohanam singing detection and similarity scoring.
+- [x] **Step 4**: 72 Melakarta raga database & scale matching engine.
+- [x] **Step 5**: Arohanam–Avarohanam singing detection and similarity scoring.
 - [ ] **Step 6**: Janya ragas and phrase-based (*pakad*) recognition.
 
 ---
 
 ## 📄 License
 MIT
+

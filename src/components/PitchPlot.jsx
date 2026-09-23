@@ -21,19 +21,21 @@ const PLOT_GROUND = '#181B3A';
 /**
  * Live pitch trace with Carnatic Swara grid lines and Western note references.
  */
-export default function PitchPlot({ traceRef, active, tonicHz }) {
+export default function PitchPlot({ traceRef, active, tonicHz, targetRaga }) {
   const canvasRef = useRef(null);
   const centerRef = useRef(DEFAULT_CENTER);
   const activeRef = useRef(active);
   const tonicRef = useRef(tonicHz);
+  const targetRagaRef = useRef(targetRaga);
 
   useEffect(() => {
     activeRef.current = active;
     tonicRef.current = tonicHz;
+    targetRagaRef.current = targetRaga;
     if (!active) {
       centerRef.current = tonicHz ? hzToMidi(tonicHz) + 6 : DEFAULT_CENTER;
     }
-  }, [active, tonicHz]);
+  }, [active, tonicHz, targetRaga]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -94,6 +96,8 @@ export default function PitchPlot({ traceRef, active, tonicHz }) {
         let isSa = false;
         let isPa = false;
         let swaraObj = null;
+        const targetRaga = targetRagaRef.current;
+        let isInTarget = true;
 
         if (tonicMidi !== null) {
           const semitonesFromTonic = Math.round(midi - tonicMidi);
@@ -102,22 +106,37 @@ export default function PitchPlot({ traceRef, active, tonicHz }) {
           const sthayi = getSthayi(octaveDiff);
           isSa = swaraIndex === 0;
           isPa = swaraIndex === 7;
+
+          isInTarget = targetRaga ? targetRaga.swarasthanaSet.has(swaraIndex) : true;
+          const ragaSwara = targetRaga?.swaras.find((s) => s.index === swaraIndex);
+          const symbolToUse = ragaSwara ? ragaSwara.symbol : SWARASTHANAS[swaraIndex].symbol;
+
           swaraObj = {
-            symbol: sthayi.symbolModifier(SWARASTHANAS[swaraIndex].symbol),
-            name: SWARASTHANAS[swaraIndex].name,
+            swaraIndex,
+            symbol: sthayi.symbolModifier(symbolToUse),
+            name: ragaSwara ? ragaSwara.name : SWARASTHANAS[swaraIndex].name,
             isAchala: isSa || isPa,
             isSa,
             isPa,
+            isInTarget,
           };
         }
 
         // Line styles
-        if (isSa) {
+        if (targetRaga && !isInTarget) {
+          // Dim non-target notes when practice guide is on
+          ctx.strokeStyle = 'rgba(242, 237, 228, 0.018)';
+          ctx.lineWidth = 1;
+        } else if (isSa) {
           ctx.strokeStyle = BRASS_GLOW;
           ctx.lineWidth = 1.75;
         } else if (isPa) {
           ctx.strokeStyle = PA_GLOW;
           ctx.lineWidth = 1.25;
+        } else if (targetRaga && isInTarget) {
+          // Highlight active target raga notes
+          ctx.strokeStyle = 'rgba(100, 210, 160, 0.28)';
+          ctx.lineWidth = 1.2;
         } else if (tonicMidi !== null) {
           ctx.strokeStyle = 'rgba(242, 237, 228, 0.055)';
           ctx.lineWidth = 1;
@@ -137,7 +156,9 @@ export default function PitchPlot({ traceRef, active, tonicHz }) {
 
         // Labels
         if (tonicMidi !== null && swaraObj) {
-          if (swaraObj.isAchala) {
+          if (targetRaga && !isInTarget) {
+            // Skip or heavily fade non-target labels
+          } else if (swaraObj.isAchala) {
             // Emphasize Sa and Pa
             ctx.fillStyle = isSa ? BRASS : 'rgba(201, 162, 39, 0.85)';
             ctx.font = `600 13px "IBM Plex Sans", system-ui, sans-serif`;
@@ -145,6 +166,15 @@ export default function PitchPlot({ traceRef, active, tonicHz }) {
 
             // Western note reference alongside
             ctx.fillStyle = 'rgba(242, 237, 228, 0.38)';
+            ctx.font = '400 10px "IBM Plex Sans", system-ui, sans-serif';
+            ctx.fillText(midiToName(midi), 38, y);
+          } else if (targetRaga && isInTarget) {
+            // Target raga swaras highlighted
+            ctx.fillStyle = 'rgba(100, 220, 160, 0.9)';
+            ctx.font = `600 12px "IBM Plex Sans", system-ui, sans-serif`;
+            ctx.fillText(swaraObj.symbol, 12, y);
+
+            ctx.fillStyle = 'rgba(242, 237, 228, 0.32)';
             ctx.font = '400 10px "IBM Plex Sans", system-ui, sans-serif';
             ctx.fillText(midiToName(midi), 38, y);
           } else {

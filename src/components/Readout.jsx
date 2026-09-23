@@ -19,10 +19,17 @@ function levelFraction(rms) {
   return Math.max(0, Math.min(1, (db + 60) / 60));
 }
 
-export default function Readout({ hz, clarity, rms, listening, tonicHz }) {
+export default function Readout({ hz, clarity, rms, listening, tonicHz, targetRaga }) {
   const voiced = hz > 0;
   const midi = voiced ? hzToMidi(hz) : 0;
   const swara = voiced && tonicHz ? hzToSwara(hz, tonicHz) : null;
+
+  const targetSwara =
+    targetRaga && swara
+      ? targetRaga.swaras.find((s) => s.index === swara.swarasthanaIndex)
+      : null;
+  const isTargetNote = !!targetSwara;
+  const isAnyaswara = targetRaga && swara && !isTargetNote;
 
   return (
     <div className="readout">
@@ -39,7 +46,7 @@ export default function Readout({ hz, clarity, rms, listening, tonicHz }) {
       </div>
 
       {tonicHz ? (
-        <div className={`readout-swara ${voiced ? 'active' : 'idle'}`}>
+        <div className={`readout-swara ${voiced ? 'active' : 'idle'} ${isAnyaswara ? 'anyaswara-pill' : isTargetNote ? 'target-pill' : ''}`}>
           {voiced && swara ? (
             <>
               <div className="swara-pill">
@@ -47,8 +54,13 @@ export default function Readout({ hz, clarity, rms, listening, tonicHz }) {
                 <span className="swara-cents">{formatCents(swara.cents)}c</span>
               </div>
               <span className="swara-desc">
-                {swara.name} · <small>{swara.sthayi}</small>
+                {targetSwara ? targetSwara.name : swara.name} · <small>{swara.sthayi}</small>
               </span>
+              {targetRaga && (
+                <span className={`target-status-badge ${isTargetNote ? 'in-scale' : 'out-scale'}`}>
+                  {isTargetNote ? `✓ ${targetRaga.name}` : `⚠️ Anyaswara`}
+                </span>
+              )}
             </>
           ) : (
             <span className="swara-hint">Relative to Sa</span>
@@ -78,7 +90,9 @@ export default function Readout({ hz, clarity, rms, listening, tonicHz }) {
         {listening
           ? voiced
             ? swara
-              ? `Singing ${swara.name} (${swara.formattedSymbol})`
+              ? isAnyaswara
+                ? `Singing ${swara.name} (${swara.formattedSymbol}) — Foreign note in ${targetRaga.name}!`
+                : `Singing ${targetSwara ? targetSwara.name : swara.name} (${swara.formattedSymbol})`
               : 'Holding a pitch. The line should track your voice.'
             : 'Listening. Sing or hum a steady note.'
           : 'Idle.'}
