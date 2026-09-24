@@ -3,9 +3,9 @@ import { createNoteSegmenter } from './noteSegmenter.js';
 import { createScaleRunTracker } from './sequenceMatcher.js';
 import { tanpura } from './tanpura.js';
 
-export function useArohanaTracker({ readout, listening, tonicHz, targetRaga }) {
+export function useArohanaTracker({ readout, listening, tonicHz, targetRaga, targetPhrase = null }) {
   const segmenterRef = useRef(createNoteSegmenter(tonicHz));
-  const trackerRef = useRef(createScaleRunTracker(targetRaga));
+  const trackerRef = useRef(createScaleRunTracker(targetRaga, targetPhrase));
 
   const [runState, setRunState] = useState(() => trackerRef.current.getState());
   const [activeNote, setActiveNote] = useState(null);
@@ -24,15 +24,19 @@ export function useArohanaTracker({ readout, listening, tonicHz, targetRaga }) {
     });
   }, []);
 
-  // Sync target raga changes
+  // Sync target raga or target phrase changes
   useEffect(() => {
-    trackerRef.current.setRaga(targetRaga);
+    if (targetPhrase) {
+      trackerRef.current.setPhraseTarget(targetPhrase);
+    } else {
+      trackerRef.current.setRaga(targetRaga);
+    }
     setRunState(trackerRef.current.getState());
-  }, [targetRaga]);
+  }, [targetRaga, targetPhrase]);
 
   // Process live pitch frames
   useEffect(() => {
-    if (!listening || !tonicHz || !targetRaga) return;
+    if (!listening || !tonicHz || (!targetRaga && !targetPhrase)) return;
 
     const { hz, clarity, rms } = readout;
     const now = performance.now();
@@ -51,7 +55,7 @@ export function useArohanaTracker({ readout, listening, tonicHz, targetRaga }) {
     } else if (activeNote && hz === 0) {
       setActiveNote(null);
     }
-  }, [readout, listening, tonicHz, targetRaga, activeNote]);
+  }, [readout, listening, tonicHz, targetRaga, targetPhrase, activeNote]);
 
   const resetRun = useCallback(() => {
     segmenterRef.current.reset();

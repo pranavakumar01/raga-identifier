@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { hzToSwara } from './notes.js';
-import { matchMelakarta } from './melakarta.js';
+import { matchAllRagas } from './phraseMatcher.js';
 
 const MIN_CLARITY = 0.85;
 const MIN_RMS = 0.007;
@@ -8,9 +8,9 @@ const MAX_CENTS_TOLERANCE = 45; // Must be within +/- 45 cents of the swarasthan
 const UPDATE_THROTTLE_MS = 60;
 
 /**
- * Custom hook to accumulate vocal swara dwell time and evaluate Melakarta scales in real time.
+ * Custom hook to accumulate vocal swara dwell time and evaluate Melakarta & Janya scales in real time.
  */
-export function useSwaraTracker({ readout, listening, tonicHz }) {
+export function useSwaraTracker({ readout, listening, tonicHz, phraseScores = {} }) {
   const [dwellTimes, setDwellTimes] = useState(() => new Array(12).fill(0));
   const [targetRaga, setTargetRaga] = useState(null); // Selected raga for guided practice
   const [guideMode, setGuideMode] = useState(false); // Practice guide mode toggle
@@ -49,14 +49,14 @@ export function useSwaraTracker({ readout, listening, tonicHz }) {
     }
   }, [readout, listening, tonicHz]);
 
-  // Compute Melakarta candidate matches
+  // Compute unified Melakarta + Janya candidate matches incorporating phrase scores
   const matchResult = useMemo(() => {
-    return matchMelakarta(dwellTimes, { minDwellMs: 120 });
-  }, [dwellTimes]);
+    return matchAllRagas(dwellTimes, phraseScores, { minDwellMs: 120 });
+  }, [dwellTimes, phraseScores]);
 
   // For Target Raga practice: which notes in the target scale have been sung?
   const targetProgress = useMemo(() => {
-    if (!targetRaga) return null;
+    if (!targetRaga || !targetRaga.swaras) return null;
     const hitMap = {};
     let hitCount = 0;
     for (const s of targetRaga.swaras) {

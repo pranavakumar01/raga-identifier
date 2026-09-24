@@ -3,19 +3,24 @@ import PitchPlot from './components/PitchPlot.jsx';
 import Readout from './components/Readout.jsx';
 import RagaMatcher from './components/RagaMatcher.jsx';
 import ArohanaRunway from './components/ArohanaRunway.jsx';
+import PhraseRecognizer from './components/PhraseRecognizer.jsx';
 import TanpuraControls from './components/TanpuraControls.jsx';
 import TonicBar from './components/TonicBar.jsx';
 import { useMicPitch } from './audio/useMicPitch.js';
 import { useSwaraTracker } from './audio/useSwaraTracker.js';
 import { useArohanaTracker } from './audio/useArohanaTracker.js';
+import { usePhraseTracker } from './audio/usePhraseTracker.js';
+import { JANYA_RAGAS } from './audio/janya.js';
+import { MELAKARTA_RAGAS } from './audio/melakarta.js';
 
 export default function App() {
   const { status, error, device, readout, traceRef, start, stop } = useMicPitch();
   const listening = status === 'listening';
   const busy = status === 'starting';
 
-  const [activeTab, setActiveTab] = useState('runway'); // 'runway' | 'matcher'
+  const [activeTab, setActiveTab] = useState('runway'); // 'runway' | 'matcher' | 'phrases'
   const [showTanpuraControls, setShowTanpuraControls] = useState(false);
+  const [targetPhrase, setTargetPhrase] = useState(null);
 
   const [tonicHz, setTonicHz] = useState(() => {
     const saved = localStorage.getItem('carnatic_tonic_hz');
@@ -31,6 +36,16 @@ export default function App() {
     }
   }, []);
 
+  // Real-time characteristic phrase & pakad detector
+  const {
+    noteHistory,
+    caughtPhrases,
+    phraseScores,
+    latestCatch,
+    clearHistory,
+  } = usePhraseTracker({ readout, listening, tonicHz });
+
+  // Real-time Swara & Raga matching engine (Melakartas + Janyas)
   const {
     dwellTimes,
     matchResult,
@@ -40,15 +55,34 @@ export default function App() {
     setGuideMode,
     targetProgress,
     resetTracker,
-  } = useSwaraTracker({ readout, listening, tonicHz });
+  } = useSwaraTracker({ readout, listening, tonicHz, phraseScores });
 
+  // Interactive trajectory runway (Scale Arohana/Avarohana & Pakad runs)
   const {
     runState,
     activeNote,
     resetRun,
     tanpuraPlaying,
     toggleTanpura,
-  } = useArohanaTracker({ readout, listening, tonicHz, targetRaga });
+  } = useArohanaTracker({ readout, listening, tonicHz, targetRaga, targetPhrase });
+
+  // Jump from Phrase Recognizer to Runway with a chosen phrase
+  const handleSelectPhraseForRunway = useCallback((phrase) => {
+    setTargetPhrase(phrase);
+
+    // If the phrase has associated raga, sync targetRaga
+    if (phrase.ragaId) {
+      const janya = JANYA_RAGAS.find((j) => j.id === phrase.ragaId);
+      if (janya) {
+        setTargetRaga(janya);
+      } else if (phrase.melakartaNum) {
+        const mela = MELAKARTA_RAGAS[phrase.melakartaNum - 1];
+        if (mela) setTargetRaga(mela);
+      }
+    }
+
+    setActiveTab('runway');
+  }, [setTargetRaga]);
 
   return (
     <div className="app">
@@ -56,7 +90,7 @@ export default function App() {
         <div className="bar-headings">
           <h1 className="title">Carnatic Raga Identifier</h1>
           <p className="purpose">
-            Step 5: Practice and verify canonical <strong>Arohanam–Avarohanam trajectories</strong>, or identify Melakarta parent scales.
+            Step 6: Real-time <strong>Janya Ragas</strong>, dynamic <strong>Arohana–Avarohana runways</strong>, and signature phrase (<strong>Pakad</strong>) recognition.
           </p>
         </div>
         <div className="header-actions">
@@ -126,8 +160,8 @@ export default function App() {
           onClick={() => setActiveTab('runway')}
           type="button"
         >
-          <span>🛫 Arohanam–Avarohanam Runway</span>
-          <span className="tab-pill">Step 5</span>
+          <span>🛫 Scale &amp; Phrase Runway</span>
+          <span className="tab-pill">Step 5 &amp; 6</span>
         </button>
 
         <button
@@ -135,9 +169,22 @@ export default function App() {
           onClick={() => setActiveTab('matcher')}
           type="button"
         >
-          <span>🎯 72 Melakarta Scale Matcher</span>
+          <span>🎯 Raga Matcher (Melakarta &amp; Janya)</span>
           {matchResult.activeCount > 0 && (
             <span className="tab-pill gold">{matchResult.activeCount} notes</span>
+          )}
+        </button>
+
+        <button
+          className={`tab-btn ${activeTab === 'phrases' ? 'active' : ''}`}
+          onClick={() => setActiveTab('phrases')}
+          type="button"
+        >
+          <span>🎶 Phrase &amp; Pakad Recognizer</span>
+          {caughtPhrases.length > 0 ? (
+            <span className="tab-pill gold">{caughtPhrases.length} caught</span>
+          ) : (
+            <span className="tab-pill new">Step 6</span>
           )}
         </button>
       </div>
@@ -149,13 +196,15 @@ export default function App() {
           resetRun={resetRun}
           targetRaga={targetRaga}
           setTargetRaga={setTargetRaga}
+          targetPhrase={targetPhrase}
+          setTargetPhrase={setTargetPhrase}
           tanpuraPlaying={tanpuraPlaying}
           toggleTanpura={toggleTanpura}
           onOpenTanpuraControls={() => setShowTanpuraControls(true)}
           listening={listening}
           tonicHz={tonicHz}
         />
-      ) : (
+      ) : activeTab === 'matcher' ? (
         <RagaMatcher
           dwellTimes={dwellTimes}
           matchResult={matchResult}
@@ -165,6 +214,18 @@ export default function App() {
           setGuideMode={setGuideMode}
           targetProgress={targetProgress}
           resetTracker={resetTracker}
+          tonicHz={tonicHz}
+        />
+      ) : (
+        <PhraseRecognizer
+          noteHistory={noteHistory}
+          caughtPhrases={caughtPhrases}
+          phraseScores={phraseScores}
+          latestCatch={latestCatch}
+          clearHistory={clearHistory}
+          onSelectPhraseForRunway={handleSelectPhraseForRunway}
+          onSelectRaga={setTargetRaga}
+          listening={listening}
           tonicHz={tonicHz}
         />
       )}
@@ -184,9 +245,8 @@ export default function App() {
         ) : (
           <span>No input open</span>
         )}
-        <span className="foot-scale">10s history · Arohanam-Avarohanam trajectory engine active</span>
+        <span className="foot-scale">10s history · Real-time Janya &amp; Pakad engine active</span>
       </footer>
     </div>
   );
 }
-

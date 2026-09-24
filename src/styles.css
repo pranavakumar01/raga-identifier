@@ -1837,3 +1837,751 @@ body {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   STEP 6: Janya Ragas, Phrase Practice Runway & Pakad Recognizer
+   ========================================================================== */
+
+/* Runway Selector Bar & Quick Picks */
+.runway-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  background: rgba(24, 27, 58, 0.65);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.runway-selector-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 260px;
+}
+
+.selector-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.phrase-select {
+  border-color: rgba(201, 162, 39, 0.4);
+}
+
+.clear-btn {
+  margin-left: auto;
+}
+
+.runway-quick-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.pills-title {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.quick-pick-pill {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  background: rgba(242, 237, 228, 0.06);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.quick-pick-pill:hover {
+  background: rgba(201, 162, 39, 0.15);
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.chip-parent {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  margin-left: 6px;
+}
+
+.chip-phrase-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-left: 8px;
+}
+
+.phrase-track {
+  border-left: 3px solid #38bdf8;
+}
+
+.track-phrase-context {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+/* Tab Pill "New" */
+.tab-pill.new {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+/* Janya Badge in Matcher */
+.candidate-num-badge.janya {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.35);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.phrase-bonus-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-top: 3px;
+}
+
+.filter-pill-group {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-pill {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  background: rgba(242, 237, 228, 0.05);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.filter-pill:hover {
+  background: rgba(242, 237, 228, 0.1);
+  color: var(--ink);
+}
+
+.filter-pill.active {
+  background: rgba(201, 162, 39, 0.2);
+  border-color: var(--brass);
+  color: var(--brass);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   PhraseRecognizer Component Styles
+   ========================================================================== */
+
+.phrase-panel {
+  background: rgba(24, 27, 58, 0.55);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.phrase-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.phrase-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.phrase-step-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+.phrase-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.phrase-sub {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+/* Live Singing Tape */
+.phrase-tape-container {
+  background: #141733;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+
+.tape-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.tape-label {
+  font-weight: 600;
+  color: var(--brass);
+}
+
+.tape-hint {
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+
+.phrase-tape {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 2px;
+  min-height: 52px;
+}
+
+.tape-empty {
+  color: var(--ink-3);
+  font-style: italic;
+  font-size: 12.5px;
+  padding: 8px 0;
+}
+
+.tape-swara-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tape-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 42px;
+  border-radius: 5px;
+  background: rgba(242, 237, 228, 0.08);
+  border: 1px solid var(--rule);
+  padding: 2px 6px;
+}
+
+.tape-bubble.achala {
+  border-color: var(--brass);
+  background: rgba(201, 162, 39, 0.14);
+}
+
+.tape-swara-sym {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tape-bubble.achala .tape-swara-sym {
+  color: var(--brass);
+}
+
+.tape-swara-cents {
+  font-size: 9.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.tape-swara-name {
+  display: none;
+}
+
+.tape-arrow {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+/* Celebration Catch Banner */
+.phrase-catch-banner {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.18) 0%, rgba(56, 189, 248, 0.12) 100%);
+  border: 1px solid var(--brass);
+  border-radius: 4px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: catchGlow 1.4s ease infinite alternate;
+}
+
+@keyframes catchGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 22px rgba(201, 162, 39, 0.45);
+  }
+}
+
+.catch-badge-pulse {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid #10b981;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.catch-body {
+  flex: 1 1 auto;
+}
+
+.catch-raga-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.catch-raga-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brass);
+}
+
+.catch-category-pill {
+  font-size: 11px;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.catch-parent-pill {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.catch-phrase-title {
+  margin: 4px 0 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.catch-swara-sequence {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.catch-swara-chip {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(201, 162, 39, 0.3);
+  border: 1px solid var(--brass);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.catch-desc {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.phrase-runway-btn {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #121429;
+  background: var(--brass);
+  border: none;
+  border-radius: 3px;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 120ms ease;
+  box-shadow: 0 2px 8px rgba(201, 162, 39, 0.35);
+}
+
+.phrase-runway-btn:hover {
+  background: #deb331;
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.5);
+}
+
+/* Two-column Layout for Caught Log vs Library */
+.phrase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 16px;
+}
+
+.phrase-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.col-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.col-badge {
+  font-size: 11px;
+  color: var(--ink-2);
+  background: rgba(242, 237, 228, 0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.col-badge.gold {
+  color: var(--brass);
+  background: rgba(201, 162, 39, 0.15);
+  font-weight: 600;
+}
+
+/* Caught List */
+.caught-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.caught-empty {
+  padding: 24px 16px;
+  background: rgba(24, 27, 58, 0.4);
+  border: 1px dashed var(--rule);
+  border-radius: 4px;
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.caught-empty small {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+
+.caught-card {
+  background: #191c3d;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--brass);
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.caught-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.caught-raga-chip {
+  font-size: 13px;
+  color: var(--brass);
+}
+
+.chip-sub {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-left: 6px;
+}
+
+.caught-time {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.caught-phrase-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.caught-sequence-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.seq-swara {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(242, 237, 228, 0.08);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.caught-confidence {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.caught-desc-text {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.caught-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.mini-action-btn {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: rgba(242, 237, 228, 0.06);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.mini-action-btn:hover {
+  background: rgba(201, 162, 39, 0.15);
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+/* Master Bank Column */
+.bank-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bank-search-input {
+  font: inherit;
+  font-size: 12.5px;
+  background: rgba(24, 27, 58, 0.8);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 6px 10px;
+  outline: none;
+}
+
+.bank-search-input:focus {
+  border-color: var(--brass);
+}
+
+.bank-pill-row {
+  display: flex;
+  gap: 6px;
+}
+
+.bank-pill {
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  background: rgba(242, 237, 228, 0.05);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.bank-pill:hover {
+  color: var(--ink);
+  background: rgba(242, 237, 228, 0.1);
+}
+
+.bank-pill.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.bank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.bank-phrase-card {
+  background: #171a39;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 120ms ease;
+}
+
+.bank-phrase-card:hover {
+  border-color: rgba(201, 162, 39, 0.4);
+}
+
+.bank-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.bank-raga-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--brass);
+}
+
+.bank-cat-label {
+  display: block;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.pakad-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e0751e;
+  background: rgba(224, 117, 30, 0.15);
+  border: 1px solid rgba(224, 117, 30, 0.35);
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bank-phrase-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.bank-swaras {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bank-swara-item {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(242, 237, 228, 0.07);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 2px 7px;
+}
+
+.bank-phrase-desc {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.bank-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.bank-practice-btn {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(201, 162, 39, 0.15);
+  border: 1px solid var(--brass);
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.bank-practice-btn:hover {
+  background: var(--brass);
+  color: #121429;
+}
+
+@media (max-width: 820px) {
+  .phrase-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
