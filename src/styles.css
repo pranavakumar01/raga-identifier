@@ -1549,19 +1549,17 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-.tanpura-card.droid-card {
-  background: linear-gradient(180deg, #240b0f 0%, #150507 100%);
-  border: 1px solid rgba(224, 117, 30, 0.45);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 25px rgba(224, 117, 30, 0.18);
-  border-radius: 10px;
+.tanpura-card {
+  background: #1e090c;
+  border: 1px solid rgba(224, 117, 30, 0.38);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 117, 30, 0.18);
+  border-radius: 8px;
   width: 100%;
-  max-width: 480px;
-  max-height: 92vh;
-  overflow-y: auto;
-  padding: 18px 22px 20px;
+  max-width: 360px;
+  padding: 18px 22px 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   color: #fff;
 }
 
@@ -1576,11 +1574,11 @@ body {
 .tanpura-card-title-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .tanpura-card-icon {
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .tanpura-card-title {
@@ -1589,57 +1587,6 @@ body {
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.01em;
-}
-
-.tanpura-card-sub {
-  display: block;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.tanpura-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.droid-power-btn {
-  background: #36171b;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 120ms ease;
-}
-
-.droid-power-btn:hover {
-  background: #4a2026;
-  border-color: #e0751e;
-}
-
-.droid-power-btn.on {
-  background: rgba(16, 185, 129, 0.18);
-  border-color: #10b981;
-  color: #10b981;
-}
-
-.power-led {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #666;
-  transition: all 120ms ease;
-}
-
-.droid-power-btn.on .power-led {
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
 }
 
 .tanpura-close-btn {
@@ -1658,424 +1605,66 @@ body {
   color: #fff;
 }
 
-/* 1. 4-String Bridge Strum Visualizer */
-.droid-bridge-visualizer {
-  background: #120305;
-  border: 1px solid rgba(224, 117, 30, 0.25);
-  border-radius: 6px;
-  padding: 10px 14px;
-}
-
-.bridge-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.bridge-title {
-  font-weight: 700;
-  color: #e0751e;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 10.5px;
-}
-
-.bridge-tempo {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 11px;
-}
-
-.droid-strings-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.droid-string-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 2px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.02);
-  transition: background 120ms ease;
-}
-
-.droid-string-col.plucking {
-  background: rgba(224, 117, 30, 0.12);
-}
-
-.string-led {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  transition: all 120ms ease;
-}
-
-.string-led.lit {
-  background: #e0751e;
-  box-shadow: 0 0 10px #e0751e;
-}
-
-.string-wire-track {
-  height: 40px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-.string-wire {
-  width: 2px;
-  height: 100%;
-  background: rgba(224, 117, 30, 0.3);
-  border-radius: 1px;
-  transition: all 120ms ease;
-}
-
-.droid-string-col.plucking .string-wire {
-  background: #ffb066;
-  box-shadow: 0 0 12px #ff9e42;
-  animation: wireVibe 0.15s ease infinite alternate;
-  width: 3px;
-}
-
-@keyframes wireVibe {
-  0% { transform: scaleX(1); }
-  100% { transform: scaleX(2.2); }
-}
-
-.string-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1.1;
-}
-
-.string-note {
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.string-num {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-/* 2. Sounding Drone LCD Display */
-.droid-lcd-panel {
-  background: #0d0204;
-  border: 1px solid rgba(224, 117, 30, 0.45);
-  border-radius: 6px;
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-}
-
-.lcd-label {
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.5);
-  display: block;
-  margin-bottom: 2px;
-}
-
-.lcd-note-val {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  color: #e0751e;
-  text-shadow: 0 0 12px rgba(224, 117, 30, 0.4);
-  letter-spacing: 0.02em;
-}
-
-.lcd-right {
-  text-align: right;
-}
-
-.lcd-hz {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  font-variant-numeric: tabular-nums;
-}
-
-.lcd-tuning-tags {
-  display: flex;
-  gap: 4px;
-  justify-content: flex-end;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-
-.tuning-tag {
-  font-size: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px 6px;
-  border-radius: 3px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.tuning-tag.semi {
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
-}
-
-.tuning-tag.cents {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.15);
-}
-
-/* Control Rows */
 .tanpura-control-rows {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.tanpura-row-group {
+.tanpura-row {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tanpura-group-label {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.75);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.group-header-row {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  gap: 12px;
 }
 
-.notation-toggle {
-  display: flex;
-  gap: 4px;
-}
-
-.notation-btn {
-  background: #2b1417;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 120ms ease;
-}
-
-.notation-btn.active {
-  background: rgba(224, 117, 30, 0.25);
-  border-color: #e0751e;
-  color: #e0751e;
-  font-weight: 700;
-}
-
-/* First String Pills */
-.droid-pill-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.tanpura-row.slider-row {
+  flex-direction: column;
+  align-items: stretch;
   gap: 6px;
+  margin-top: 2px;
 }
 
-.droid-mode-pill {
-  background: #2b1417;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
-  padding: 7px 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  transition: all 120ms ease;
-}
-
-.droid-mode-pill:hover {
-  border-color: rgba(224, 117, 30, 0.4);
-}
-
-.droid-mode-pill.active {
-  background: rgba(224, 117, 30, 0.22);
-  border-color: #e0751e;
-  color: #e0751e;
-  box-shadow: 0 0 10px rgba(224, 117, 30, 0.3);
-}
-
-.pill-name {
-  font-size: 14px;
+.tanpura-row-label {
+  font-size: 13.5px;
   font-weight: 700;
+  color: #f7f3ee;
+  letter-spacing: 0.01em;
 }
 
-.pill-sub {
-  font-size: 9.5px;
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.droid-mode-pill.active .pill-sub {
-  color: rgba(224, 117, 30, 0.85);
-}
-
-/* Base Pitch Grid */
-.droid-pitch-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 5px;
-}
-
-.droid-pitch-btn {
-  background: #240e11;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
+.tanpura-select-box {
+  background: #361f23;
   border-radius: 4px;
-  padding: 6px 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: all 120ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  width: 145px;
+  transition: border-color 120ms ease;
 }
 
-.droid-pitch-btn:hover {
-  background: #36171b;
-  border-color: rgba(224, 117, 30, 0.5);
-}
-
-.droid-pitch-btn.selected {
-  background: #e0751e;
-  color: #fff;
+.tanpura-select-box:hover,
+.tanpura-select-box:focus-within {
   border-color: #e0751e;
-  font-weight: 700;
-  box-shadow: 0 0 12px rgba(224, 117, 30, 0.5);
 }
 
-.pbtn-name {
+.tanpura-native-select {
+  width: 100%;
+  background: #361f23;
+  color: #fff;
   font-size: 13px;
-  font-weight: 700;
-}
-
-.pbtn-sub {
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.droid-pitch-btn.selected .pbtn-sub {
-  color: #fff;
-}
-
-/* Presets Bar */
-.droid-presets-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-
-.presets-label {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.presets-pills {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.preset-chip {
-  font: inherit;
-  font-size: 10.5px;
   font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 3px;
+  border: none;
+  padding: 6px 10px;
+  outline: none;
   cursor: pointer;
-  border: 1px solid;
-  transition: all 120ms ease;
 }
 
-.preset-chip.male {
-  background: rgba(56, 189, 248, 0.1);
-  border-color: rgba(56, 189, 248, 0.3);
-  color: #38bdf8;
-}
-
-.preset-chip.male:hover {
-  background: rgba(56, 189, 248, 0.22);
-}
-
-.preset-chip.female {
-  background: rgba(236, 72, 153, 0.1);
-  border-color: rgba(236, 72, 153, 0.3);
-  color: #f472b6;
-}
-
-.preset-chip.female:hover {
-  background: rgba(236, 72, 153, 0.22);
-}
-
-/* Dual Tuning Row */
-.droid-dual-tuning-row {
-  display: grid;
-  grid-template-columns: 1fr 1.65fr;
-  gap: 10px;
-}
-
-.tuning-box {
-  background: #150406;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tuning-box-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.tuning-box-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.75);
-  text-transform: uppercase;
-}
-
-.tuning-box-val {
-  font-size: 12px;
-  font-weight: 700;
-  color: #38bdf8;
-  font-variant-numeric: tabular-nums;
-}
-
-.tuning-box-val.cents-val {
-  color: #10b981;
-}
-
-.tuning-box-desc {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.4);
+.tanpura-native-select option {
+  background: #1e090c;
+  color: #fff;
 }
 
 /* Stepper [-] 0 [+] */
+
 .tanpura-stepper {
   display: flex;
   align-items: center;
@@ -2088,8 +1677,8 @@ body {
   color: #e0751e;
   font-size: 16px;
   font-weight: 700;
-  width: 36px;
-  height: 30px;
+  width: 40px;
+  height: 32px;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -2109,8 +1698,8 @@ body {
   color: #fff;
   font-size: 13.5px;
   font-weight: 700;
-  flex: 1;
-  height: 30px;
+  min-width: 54px;
+  height: 32px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -2118,139 +1707,52 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Micro Cents Stepper & Slider */
-.cents-stepper-row {
+.tanpura-sounding-badge {
   display: flex;
   align-items: center;
-  gap: 4px;
-  justify-content: space-between;
-}
-
-.cents-step-btn {
-  background: #2b1417;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #10b981;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 6px;
-  border-radius: 3px;
-  cursor: pointer;
-  flex: 1;
-  text-align: center;
-  transition: all 120ms ease;
-}
-
-.cents-step-btn:hover {
-  background: #3d1b20;
-  border-color: #10b981;
-}
-
-.cents-reset-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 10px;
-  font-weight: 600;
-  padding: 4px 6px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 120ms ease;
-}
-
-.cents-reset-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-
-/* Rhythm Pills */
-.droid-rhythm-pills {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-
-.rhythm-pill {
-  background: #2b1417;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 11px;
-  padding: 7px 4px;
+  gap: 8px;
+  background: rgba(224, 117, 30, 0.12);
+  border: 1px solid rgba(224, 117, 30, 0.35);
   border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  font-weight: 500;
-  transition: all 120ms ease;
+  padding: 8px 12px;
+  margin: 4px 0 10px;
+  font-size: 12.5px;
 }
 
-.rhythm-pill:hover {
-  background: #36171b;
-  border-color: rgba(201, 162, 39, 0.4);
+.sounding-label {
+  color: var(--ink-2);
 }
 
-.rhythm-pill.active {
-  background: rgba(201, 162, 39, 0.2);
-  border-color: var(--brass);
-  color: var(--brass);
-  font-weight: 700;
-}
-
-/* Sliders Grid */
-.droid-sliders-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.slider-card {
-  background: #150406;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.slider-header-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.s-label {
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 11.5px;
-}
-
-.s-val {
+.sounding-val {
   color: #e0751e;
   font-weight: 700;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
 }
 
-.volume-label-group {
+.sounding-hz {
+  color: var(--ink-3);
+  font-size: 11px;
+}
+
+.sounding-offset {
+  margin-left: auto;
+  font-size: 11px;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+/* Sliders */
+
+.tanpura-slider-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.mute-btn {
-  background: transparent;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-.slider-sub-labels {
-  display: flex;
   justify-content: space-between;
-  font-size: 9.5px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 2px;
+}
+
+.tanpura-slider-val {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e0751e;
+  font-variant-numeric: tabular-nums;
 }
 
 .tanpura-range-slider {
@@ -2267,8 +1769,8 @@ body {
 .tanpura-range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #e0751e;
   box-shadow: 0 0 8px rgba(224, 117, 30, 0.8);
@@ -2281,8 +1783,8 @@ body {
 }
 
 .tanpura-range-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #e0751e;
   box-shadow: 0 0 8px rgba(224, 117, 30, 0.8);
@@ -2290,18 +1792,19 @@ body {
   border: none;
 }
 
-/* Footer Action */
-.tanpura-card-footer.droid-footer {
+/* Footer & Master Toggle */
+
+.tanpura-card-footer {
   margin-top: 4px;
 }
 
 .tanpura-main-play-btn {
   width: 100%;
-  padding: 11px 16px;
+  padding: 10px 16px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #fff;
   background: #e0751e;
