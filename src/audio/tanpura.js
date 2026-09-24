@@ -4,11 +4,11 @@
 // - First String: Pa (Panchamam), Ma (Madhyamam), Ni (Nishadham)
 // - Pause After: First & Last, None, First, Last
 // - Pitch selection (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-// - Pitch Semi: +/- semitone fine pitch shift
+// - Pitch Semi: +/- semitone fine pitch shift using authentic acoustic audio files
 // - Speed (Tempo slider): 0.6x to 1.6x
 // - Volume: 0% to 100%
 
-import { hzToMidi, midiToHz } from './notes.js';
+import { hzToMidi } from './notes.js';
 
 export const PITCH_LIST = [
   { name: 'C', file: 'C', kattai: '1 Kattai', midi: 48, defaultHz: 130.81 },
@@ -31,12 +31,12 @@ class AcousticTanpuraDrone {
     this.isPlaying = false;
     this.tonicHz = 138.59; // C# default
 
-    // Configurable controls matching user's spec
+    // Configurable controls
     this.firstString = 'Pa'; // 'Pa' | 'Ma' | 'Ni'
     this.pauseAfter = 'First & Last'; // 'First & Last' | 'None' | 'First' | 'Last'
     this.notation = 'Western'; // 'Western' | 'Kattai'
     this.pitchIndex = 1; // 1 = C#
-    this.pitchSemi = 0; // -6 to +6
+    this.pitchSemi = 0; // -6 to +6 semitones offset
     this.speed = 1.0; // 0.6 to 1.6
     this.volume = 0.65; // 0 to 1
 
@@ -50,9 +50,24 @@ class AcousticTanpuraDrone {
   }
 
   notify() {
+    const st = this.getState();
     for (const listener of this.listeners) {
-      listener(this.getState());
+      listener(st);
     }
+  }
+
+  getEffectivePitchIndex() {
+    return ((this.pitchIndex + this.pitchSemi) % 12 + 12) % 12;
+  }
+
+  getEffectivePitch() {
+    return PITCH_LIST[this.getEffectivePitchIndex()];
+  }
+
+  getEffectiveHz() {
+    const baseHz = PITCH_LIST[this.pitchIndex].defaultHz;
+    // Shift by pitchSemi semitones
+    return baseHz * Math.pow(2, this.pitchSemi / 12);
   }
 
   getState() {
@@ -63,6 +78,8 @@ class AcousticTanpuraDrone {
       notation: this.notation,
       pitchIndex: this.pitchIndex,
       currentPitch: PITCH_LIST[this.pitchIndex],
+      effectivePitch: this.getEffectivePitch(),
+      effectivePitchIndex: this.getEffectivePitchIndex(),
       pitchSemi: this.pitchSemi,
       speed: this.speed,
       volume: this.volume,
@@ -70,18 +87,13 @@ class AcousticTanpuraDrone {
     };
   }
 
-  getEffectiveHz() {
-    const baseHz = PITCH_LIST[this.pitchIndex].defaultHz;
-    // Shift by pitchSemi semitones
-    return baseHz * Math.pow(2, this.pitchSemi / 12);
-  }
-
   getAudioUrl() {
     const base = import.meta.env?.BASE_URL || './';
     const cleanBase = base.endsWith('/') ? base : `${base}/`;
     const folder = this.firstString === 'Ma' ? 'MaSaSaSa' : 'PaSaSaSa';
-    const pInfo = PITCH_LIST[this.pitchIndex];
-    return `${cleanBase}audio/tanpura/${folder}/tanpura_${pInfo.file}.mp3`;
+    // Use the effective pitch audio recording so pitchSemi accurately switches pitch!
+    const effectivePInfo = this.getEffectivePitch();
+    return `${cleanBase}audio/tanpura/${folder}/tanpura_${effectivePInfo.file}.mp3`;
   }
 
   initAudio() {
@@ -94,18 +106,8 @@ class AcousticTanpuraDrone {
 
   updatePlaybackParameters() {
     if (!this.audioElement) return;
-
-    // Total playback rate combines speed setting + semitone shift (+ Ni adjustment)
-    let semitoneOffset = this.pitchSemi;
-    if (this.firstString === 'Ni') {
-      // Nishadham tuning pitch shift on Pa loop
-      semitoneOffset += 1;
-    }
-
-    const pitchRate = Math.pow(2, semitoneOffset / 12);
-    const totalRate = Math.max(0.4, Math.min(2.0, this.speed * pitchRate));
-
-    this.audioElement.playbackRate = totalRate;
+    // Speed slider controls pure playback tempo
+    this.audioElement.playbackRate = Math.max(0.5, Math.min(1.8, this.speed));
     this.audioElement.volume = Math.max(0, Math.min(1, this.volume));
   }
 
@@ -120,7 +122,17 @@ class AcousticTanpuraDrone {
       this.updatePlaybackParameters();
 
       if (this.isPlaying) {
-        this.audioElement.currentTime = prevTime;
+        const onLoaded = () => {
+          if (preserveTime && prevTime > 0 && prevTime < this.audioElement.duration) {
+            try {
+              this.audioElement.currentTime = prevTime;
+            } catch (_) {}
+          }
+          this.audioElement.play().catch(() => {});
+        };
+
+        this.audioElement.addEventListener('loadedmetadata', onLoaded, { once: true });
+        this.audioElement.load();
         this.audioElement.play().catch(() => {});
       }
     } else {
@@ -148,18 +160,30 @@ class AcousticTanpuraDrone {
     this.notify();
   }
 
+  /**
+   * Set base pitch from dropdown.
+   * Resets pitchSemi to 0 so the chosen note sounds cleanly at 0 offset.
+   */
   setPitchIndex(idx) {
     if (idx >= 0 && idx < PITCH_LIST.length) {
       this.pitchIndex = idx;
+      this.pitchSemi = 0; // Reset semitone shift when user selects a new base pitch
       this.applyAudioSource(true);
       this.notify();
     }
   }
 
+  /**
+   * Set semitone offset (-6 to +6).
+   * Switches audio source to the exact shifted chromatic sample.
+   */
   setPitchSemi(semi) {
-    this.pitchSemi = Math.max(-6, Math.min(6, semi));
-    this.updatePlaybackParameters();
-    this.notify();
+    const clamped = Math.max(-6, Math.min(6, semi));
+    if (this.pitchSemi !== clamped) {
+      this.pitchSemi = clamped;
+      this.applyAudioSource(true);
+      this.notify();
+    }
   }
 
   adjustPitchSemi(delta) {
@@ -180,12 +204,20 @@ class AcousticTanpuraDrone {
     this.notify();
   }
 
+  /**
+   * Sync tonic from external microphone or TonicBar.
+   * If the incoming Hz is already within 0.25 Hz of our effectiveHz, ignore to prevent circular feedback!
+   */
   setTonicFromMic(hz) {
     if (!hz || hz <= 0) return;
+    if (Math.abs(hz - this.getEffectiveHz()) < 0.25) {
+      return;
+    }
     this.tonicHz = hz;
     const midi = hzToMidi(hz);
     const pitchClass = ((Math.round(midi) % 12) + 12) % 12;
     this.pitchIndex = pitchClass;
+    this.pitchSemi = 0;
     this.applyAudioSource(true);
     this.notify();
   }

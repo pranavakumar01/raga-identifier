@@ -22,6 +22,8 @@ export default function TanpuraControls({ isOpen, onClose, onTonicSync }) {
     notation,
     pitchIndex,
     currentPitch,
+    effectivePitch,
+    effectiveHz,
     pitchSemi,
     speed,
     volume,
@@ -128,7 +130,7 @@ export default function TanpuraControls({ isOpen, onClose, onTonicSync }) {
                 className="tanpura-step-btn"
                 onClick={() => tanpura.adjustPitchSemi(-1)}
                 type="button"
-                title="Decrease semitone"
+                title="Decrease semitone (-1)"
               >
                 —
               </button>
@@ -139,12 +141,30 @@ export default function TanpuraControls({ isOpen, onClose, onTonicSync }) {
                 className="tanpura-step-btn"
                 onClick={() => tanpura.adjustPitchSemi(1)}
                 type="button"
-                title="Increase semitone"
+                title="Increase semitone (+1)"
               >
                 +
               </button>
             </div>
           </div>
+
+          {/* Live Sounding Drone Feedback */}
+          {effectivePitch && (
+            <div className="tanpura-sounding-badge">
+              <span className="sounding-label">Drone Sounding:</span>
+              <strong className="sounding-val">
+                {notation === 'Kattai'
+                  ? `${effectivePitch.kattai} (${effectivePitch.name})`
+                  : effectivePitch.name}
+              </strong>
+              <span className="sounding-hz">({effectiveHz.toFixed(1)} Hz)</span>
+              {pitchSemi !== 0 && (
+                <span className="sounding-offset">
+                  [{pitchSemi > 0 ? `+${pitchSemi}` : pitchSemi} st from {currentPitch.name}]
+                </span>
+              )}
+            </div>
+          )}
 
           {/* 6. Speed */}
           <div className="tanpura-row slider-row">
