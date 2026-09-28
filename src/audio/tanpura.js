@@ -106,6 +106,7 @@ class AcousticTanpuraDrone {
 
   updatePlaybackParameters() {
     if (!this.audioElement) return;
+    this.audioElement.loop = true;
     // Speed slider controls pure playback tempo
     this.audioElement.playbackRate = Math.max(0.5, Math.min(1.8, this.speed));
     this.audioElement.volume = Math.max(0, Math.min(1, this.volume));

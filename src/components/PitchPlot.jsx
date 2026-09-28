@@ -16,7 +16,7 @@ const INK = '#F2EDE4';
 const BRASS = '#C9A227';
 const BRASS_GLOW = 'rgba(201, 162, 39, 0.75)';
 const PA_GLOW = 'rgba(201, 162, 39, 0.38)';
-const PLOT_GROUND = '#181B3A';
+const PLOT_GROUND = '#121317';
 
 /**
  * Live pitch trace with Carnatic Swara grid lines and Western note references.
@@ -107,8 +107,8 @@ export default function PitchPlot({ traceRef, active, tonicHz, targetRaga }) {
           isSa = swaraIndex === 0;
           isPa = swaraIndex === 7;
 
-          isInTarget = targetRaga ? targetRaga.swarasthanaSet.has(swaraIndex) : true;
-          const ragaSwara = targetRaga?.swaras.find((s) => s.index === swaraIndex);
+          isInTarget = targetRaga?.swarasthanaSet?.has ? targetRaga.swarasthanaSet.has(swaraIndex) : true;
+          const ragaSwara = targetRaga?.swaras?.find ? targetRaga.swaras.find((s) => s.index === swaraIndex) : null;
           const symbolToUse = ragaSwara ? ragaSwara.symbol : SWARASTHANAS[swaraIndex].symbol;
 
           swaraObj = {

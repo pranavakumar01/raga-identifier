@@ -935,6 +935,12 @@ export const JANYA_RAGAS = [
   },
 ];
 
+// Ensure all Janya ragas have explicit isJanya flag and number matching parent
+JANYA_RAGAS.forEach((j) => {
+  j.isJanya = true;
+  j.number = j.melakartaNum;
+});
+
 /**
  * Famous Melakarta Signature Phrases (Pakads)
  * Even for parent scales, knowing the signature phrases allows dynamic phrase recognition!

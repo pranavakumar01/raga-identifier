@@ -62,10 +62,9 @@ export default function RagaMatcher({
       {/* Panel Header */}
       <div className="raga-panel-header">
         <div className="raga-panel-title-group">
-          <div className="raga-badge">Step 4 &amp; 6</div>
-          <h2 className="raga-panel-title">Melakarta &amp; Janya Raga Identification</h2>
+          <h2 className="raga-panel-title">Live Raga Identifier</h2>
           <span className="raga-panel-count">
-            {activeCount > 0 ? `${activeCount} swaras detected` : 'Melakartas & Janya Scales'}
+            {activeCount > 0 ? `${activeCount} swaras detected` : 'Sing or hum freely — matching ragas appear below'}
           </span>
         </div>
 
@@ -139,7 +138,15 @@ export default function RagaMatcher({
               </span>
             </div>
             <div className="target-arohana">
-              <strong>Scale:</strong> <code>{targetRaga.arohanaStr || targetRaga.arohana}</code>
+              <strong>Scale:</strong>{' '}
+              <code>
+                {targetRaga.arohanaStr ||
+                  (typeof targetRaga.arohana === 'string'
+                    ? targetRaga.arohana
+                    : Array.isArray(targetRaga.arohana)
+                    ? targetRaga.arohana.map((s) => s.symbol).join(' ')
+                    : '')}
+              </code>
             </div>
           </div>
 
@@ -148,7 +155,7 @@ export default function RagaMatcher({
               <span>Practice Progress</span>
               <strong>
                 {targetProgress ? targetProgress.hitCount : 0} /{' '}
-                {targetProgress ? targetProgress.totalCount : targetRaga.swaras.length} Notes Sung
+                {targetProgress ? targetProgress.totalCount : targetRaga.swaras?.length || 0} Notes Sung
               </strong>
             </div>
             <div className="target-progress-track">

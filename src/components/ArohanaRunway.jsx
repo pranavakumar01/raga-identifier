@@ -12,7 +12,6 @@ export default function ArohanaRunway({
   setTargetPhrase,
   tanpuraPlaying,
   toggleTanpura,
-  onOpenTanpuraControls,
   listening,
   tonicHz,
 }) {
@@ -87,9 +86,8 @@ export default function ArohanaRunway({
       {/* Runway Header */}
       <div className="runway-header">
         <div className="runway-title-group">
-          <div className="runway-step-badge">Step 5 &amp; 6</div>
           <h2 className="runway-title">
-            {isPhraseMode ? 'Pakad / Phrase Practice Runway' : 'Arohanam–Avarohanam Trajectory Runway'}
+            {isPhraseMode ? 'Sing Along & Phrase Practice' : 'Interactive Scale Practice (Arohanam & Avarohanam)'}
           </h2>
         </div>
 
@@ -103,15 +101,6 @@ export default function ArohanaRunway({
             <span className="tanpura-icon">🪕</span>
             <span>{tanpuraPlaying ? 'Acoustic Tanpura Playing' : 'Start Acoustic Tanpura'}</span>
             {tanpuraPlaying && <span className="drone-pulse" />}
-          </button>
-
-          <button
-            className="tanpura-btn secondary"
-            onClick={onOpenTanpuraControls}
-            type="button"
-            title="Open Tanpura Controls (First String, Pitch, Speed, Volume)"
-          >
-            ⚙️ Controls
           </button>
 
           <button
@@ -211,7 +200,8 @@ export default function ArohanaRunway({
                     }}
                     type="button"
                   >
-                    {j.name} ({j.category.split(' ')[0]})
+                    <span className="quick-pick-name">{j.name}</span>
+                    <span className="quick-pick-type"> ({j.category.split(' ')[0]})</span>
                   </button>
                 );
               }
@@ -305,7 +295,7 @@ export default function ArohanaRunway({
               <span className="held-cents">
                 ({activeNote.cents > 0 ? `+${activeNote.cents}` : activeNote.cents}c)
               </span>
-              {targetRaga && !targetRaga.swarasthanaSet.has(activeNote.swarasthanaIndex) && (
+              {targetRaga?.swarasthanaSet?.has && !targetRaga.swarasthanaSet.has(activeNote.swarasthanaIndex) && (
                 <span className="held-warning">⚠️ Anyaswara (Foreign Note)</span>
               )}
             </div>
@@ -365,8 +355,10 @@ export default function ArohanaRunway({
                 <div className="track-label-row">
                   <span className="track-title">1. Arohanam (Ascending Run)</span>
                   <span className="track-direction">
-                    {targetRaga.arohanaStr
+                    {targetRaga?.arohanaStr
                       ? targetRaga.arohanaStr.split(' ').join(' ──> ')
+                      : typeof targetRaga?.arohana === 'string'
+                      ? targetRaga.arohana.split(' ').join(' ──> ')
                       : 'S ──> R ──> G ──> M ──> P ──> D ──> N ──> Ṡ'}
                   </span>
                 </div>
@@ -411,8 +403,10 @@ export default function ArohanaRunway({
                 <div className="track-label-row">
                   <span className="track-title">2. Avarohanam (Descending Run)</span>
                   <span className="track-direction">
-                    {targetRaga.avarohanaStr
+                    {targetRaga?.avarohanaStr
                       ? targetRaga.avarohanaStr.split(' ').join(' ──> ')
+                      : typeof targetRaga?.avarohana === 'string'
+                      ? targetRaga.avarohana.split(' ').join(' ──> ')
                       : 'Ṡ ──> N ──> D ──> P ──> M ──> G ──> R ──> S'}
                   </span>
                 </div>

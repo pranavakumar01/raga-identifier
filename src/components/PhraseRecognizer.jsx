@@ -38,10 +38,9 @@ export default function PhraseRecognizer({
       {/* Header */}
       <div className="phrase-header">
         <div className="phrase-title-group">
-          <div className="phrase-step-badge">Step 6</div>
-          <h2 className="phrase-title">Characteristic Phrase &amp; Pakad Recognizer</h2>
+          <h2 className="phrase-title">Signature Phrase Detector</h2>
           <span className="phrase-sub">
-            Real-time detection of Vishesha Prayogas (signature catch phrases) to identify Janya and Melakarta ragas.
+            Recognizes famous melodic catchphrases (Pakads / signature sequences) as you sing them.
           </span>
         </div>
 

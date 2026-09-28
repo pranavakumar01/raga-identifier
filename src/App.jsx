@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PitchPlot from './components/PitchPlot.jsx';
 import Readout from './components/Readout.jsx';
 import RagaMatcher from './components/RagaMatcher.jsx';
 import ArohanaRunway from './components/ArohanaRunway.jsx';
 import PhraseRecognizer from './components/PhraseRecognizer.jsx';
-import TanpuraControls from './components/TanpuraControls.jsx';
 import TonicBar from './components/TonicBar.jsx';
 import { useMicPitch } from './audio/useMicPitch.js';
 import { useSwaraTracker } from './audio/useSwaraTracker.js';
@@ -19,8 +18,37 @@ export default function App() {
   const busy = status === 'starting';
 
   const [activeTab, setActiveTab] = useState('runway'); // 'runway' | 'matcher' | 'phrases'
-  const [showTanpuraControls, setShowTanpuraControls] = useState(false);
   const [targetPhrase, setTargetPhrase] = useState(null);
+
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('carnatic_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('carnatic_theme', theme);
+  }, [theme]);
+
+  // Sync with OS theme change if user hasn't explicitly set one
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => {
+      const saved = localStorage.getItem('carnatic_theme');
+      if (!saved) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const [tonicHz, setTonicHz] = useState(() => {
     const saved = localStorage.getItem('carnatic_tonic_hz');
@@ -90,10 +118,29 @@ export default function App() {
         <div className="bar-headings">
           <h1 className="title">Carnatic Raga Identifier</h1>
           <p className="purpose">
-            Step 6: Real-time <strong>Janya Ragas</strong>, dynamic <strong>Arohana–Avarohana runways</strong>, and signature phrase (<strong>Pakad</strong>) recognition.
+            Sing, hum, or play into the microphone to identify ragas and practice scales note-by-note in real-time.
           </p>
         </div>
         <div className="header-actions">
+          <button
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            type="button"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            aria-label="Toggle dark/light theme"
+          >
+            {theme === 'dark' ? (
+              <>
+                <span className="theme-toggle-icon">☀️</span>
+                <span className="theme-toggle-text">Light</span>
+              </>
+            ) : (
+              <>
+                <span className="theme-toggle-icon">🌙</span>
+                <span className="theme-toggle-text">Dark</span>
+              </>
+            )}
+          </button>
           <button
             className={`tanpura-mini-btn ${tanpuraPlaying ? 'active' : ''}`}
             onClick={toggleTanpura}
@@ -101,14 +148,6 @@ export default function App() {
             title="Toggle authentic acoustic Tanpura drone"
           >
             🪕 {tanpuraPlaying ? 'Drone ON' : 'Tanpura'}
-          </button>
-          <button
-            className="tanpura-mini-btn secondary"
-            onClick={() => setShowTanpuraControls(true)}
-            type="button"
-            title="Open Tanpura Controls (First String, Pitch, Speed, Volume)"
-          >
-            ⚙️ Controls
           </button>
           <button
             className="action"
@@ -160,8 +199,8 @@ export default function App() {
           onClick={() => setActiveTab('runway')}
           type="button"
         >
-          <span>🛫 Scale &amp; Phrase Runway</span>
-          <span className="tab-pill">Step 5 &amp; 6</span>
+          <span>🎯 Practice &amp; Sing Along</span>
+          <span className="tab-pill">Note-by-Note</span>
         </button>
 
         <button
@@ -169,9 +208,11 @@ export default function App() {
           onClick={() => setActiveTab('matcher')}
           type="button"
         >
-          <span>🎯 Raga Matcher (Melakarta &amp; Janya)</span>
-          {matchResult.activeCount > 0 && (
+          <span>🔍 Identify My Raga</span>
+          {matchResult.activeCount > 0 ? (
             <span className="tab-pill gold">{matchResult.activeCount} notes</span>
+          ) : (
+            <span className="tab-pill">Sing Freely</span>
           )}
         </button>
 
@@ -180,11 +221,11 @@ export default function App() {
           onClick={() => setActiveTab('phrases')}
           type="button"
         >
-          <span>🎶 Phrase &amp; Pakad Recognizer</span>
+          <span>🎶 Signature Phrases</span>
           {caughtPhrases.length > 0 ? (
             <span className="tab-pill gold">{caughtPhrases.length} caught</span>
           ) : (
-            <span className="tab-pill new">Step 6</span>
+            <span className="tab-pill">Famous Hooks</span>
           )}
         </button>
       </div>
@@ -200,7 +241,6 @@ export default function App() {
           setTargetPhrase={setTargetPhrase}
           tanpuraPlaying={tanpuraPlaying}
           toggleTanpura={toggleTanpura}
-          onOpenTanpuraControls={() => setShowTanpuraControls(true)}
           listening={listening}
           tonicHz={tonicHz}
         />
@@ -229,13 +269,6 @@ export default function App() {
           tonicHz={tonicHz}
         />
       )}
-
-      {/* Modal / Controls Card */}
-      <TanpuraControls
-        isOpen={showTanpuraControls}
-        onClose={() => setShowTanpuraControls(false)}
-        onTonicSync={handleSetTonic}
-      />
 
       <footer className="foot">
         {device ? (

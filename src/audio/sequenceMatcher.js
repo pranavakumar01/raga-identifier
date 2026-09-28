@@ -10,8 +10,8 @@ export function buildScaleSequences(raga) {
   const s0 = { swarasthanaIndex: 0, octaveDiff: 0, symbol: 'S', name: 'Shadjam' };
   const sDot = { swarasthanaIndex: 0, octaveDiff: 1, symbol: 'Ṡ', name: 'Tara Shadjam' };
 
-  // If the raga already defines exact arohana and avarohana arrays (like Janya ragas)
-  if (raga.arohana && Array.isArray(raga.arohana) && raga.arohana.length > 0 && raga.isJanya) {
+  // If the raga defines exact arohana and avarohana arrays (like Janya ragas)
+  if (Array.isArray(raga.arohana) && raga.arohana.length > 0) {
     const arohana = raga.arohana.map((sw, idx) => ({
       swarasthanaIndex: sw.index,
       octaveDiff: sw.octaveDiff ?? (sw.symbol === 'Ṡ' ? 1 : 0),
@@ -21,49 +21,80 @@ export function buildScaleSequences(raga) {
       phase: 'arohanam',
     }));
 
-    const avarohana = raga.avarohana.map((sw, idx) => ({
-      swarasthanaIndex: sw.index,
-      octaveDiff: sw.octaveDiff ?? (sw.symbol === 'Ṡ' ? 1 : 0),
-      symbol: sw.symbol,
-      name: sw.name,
-      stepIndex: idx,
-      phase: 'avarohanam',
-    }));
+    const avarohana = Array.isArray(raga.avarohana) && raga.avarohana.length > 0
+      ? raga.avarohana.map((sw, idx) => ({
+          swarasthanaIndex: sw.index,
+          octaveDiff: sw.octaveDiff ?? (sw.symbol === 'Ṡ' ? 1 : 0),
+          symbol: sw.symbol,
+          name: sw.name,
+          stepIndex: idx,
+          phase: 'avarohanam',
+        }))
+      : [...arohana].reverse().map((sw, idx) => ({
+          ...sw,
+          stepIndex: idx,
+          phase: 'avarohanam',
+        }));
 
     return { arohana, avarohana };
   }
 
   // Melakarta 7-swara parent scales: construct canonical 8-step ascent and descent
-  const r = raga.swaras[1];
-  const g = raga.swaras[2];
-  const m = raga.swaras[3];
-  const p = raga.swaras[4];
-  const d = raga.swaras[5];
-  const n = raga.swaras[6];
+  if (raga.swaras && Array.isArray(raga.swaras) && raga.swaras.length >= 7) {
+    const r = raga.swaras[1];
+    const g = raga.swaras[2];
+    const m = raga.swaras[3];
+    const p = raga.swaras[4];
+    const d = raga.swaras[5];
+    const n = raga.swaras[6];
 
-  const arohana = [
-    { ...s0, stepIndex: 0, phase: 'arohanam' },
-    { swarasthanaIndex: r.index, octaveDiff: 0, symbol: r.symbol, name: r.name, stepIndex: 1, phase: 'arohanam' },
-    { swarasthanaIndex: g.index, octaveDiff: 0, symbol: g.symbol, name: g.name, stepIndex: 2, phase: 'arohanam' },
-    { swarasthanaIndex: m.index, octaveDiff: 0, symbol: m.symbol, name: m.name, stepIndex: 3, phase: 'arohanam' },
-    { swarasthanaIndex: p.index, octaveDiff: 0, symbol: p.symbol, name: p.name, stepIndex: 4, phase: 'arohanam' },
-    { swarasthanaIndex: d.index, octaveDiff: 0, symbol: d.symbol, name: d.name, stepIndex: 5, phase: 'arohanam' },
-    { swarasthanaIndex: n.index, octaveDiff: 0, symbol: n.symbol, name: n.name, stepIndex: 6, phase: 'arohanam' },
-    { ...sDot, stepIndex: 7, phase: 'arohanam' },
-  ];
+    const arohana = [
+      { ...s0, stepIndex: 0, phase: 'arohanam' },
+      { swarasthanaIndex: r.index, octaveDiff: 0, symbol: r.symbol, name: r.name, stepIndex: 1, phase: 'arohanam' },
+      { swarasthanaIndex: g.index, octaveDiff: 0, symbol: g.symbol, name: g.name, stepIndex: 2, phase: 'arohanam' },
+      { swarasthanaIndex: m.index, octaveDiff: 0, symbol: m.symbol, name: m.name, stepIndex: 3, phase: 'arohanam' },
+      { swarasthanaIndex: p.index, octaveDiff: 0, symbol: p.symbol, name: p.name, stepIndex: 4, phase: 'arohanam' },
+      { swarasthanaIndex: d.index, octaveDiff: 0, symbol: d.symbol, name: d.name, stepIndex: 5, phase: 'arohanam' },
+      { swarasthanaIndex: n.index, octaveDiff: 0, symbol: n.symbol, name: n.name, stepIndex: 6, phase: 'arohanam' },
+      { ...sDot, stepIndex: 7, phase: 'arohanam' },
+    ];
 
-  const avarohana = [
-    { ...sDot, stepIndex: 0, phase: 'avarohanam' },
-    { swarasthanaIndex: n.index, octaveDiff: 0, symbol: n.symbol, name: n.name, stepIndex: 1, phase: 'avarohanam' },
-    { swarasthanaIndex: d.index, octaveDiff: 0, symbol: d.symbol, name: d.name, stepIndex: 2, phase: 'avarohanam' },
-    { swarasthanaIndex: p.index, octaveDiff: 0, symbol: p.symbol, name: p.name, stepIndex: 3, phase: 'avarohanam' },
-    { swarasthanaIndex: m.index, octaveDiff: 0, symbol: m.symbol, name: m.name, stepIndex: 4, phase: 'avarohanam' },
-    { swarasthanaIndex: g.index, octaveDiff: 0, symbol: g.symbol, name: g.name, stepIndex: 5, phase: 'avarohanam' },
-    { swarasthanaIndex: r.index, octaveDiff: 0, symbol: r.symbol, name: r.name, stepIndex: 6, phase: 'avarohanam' },
-    { ...s0, stepIndex: 7, phase: 'avarohanam' },
-  ];
+    const avarohana = [
+      { ...sDot, stepIndex: 0, phase: 'avarohanam' },
+      { swarasthanaIndex: n.index, octaveDiff: 0, symbol: n.symbol, name: n.name, stepIndex: 1, phase: 'avarohanam' },
+      { swarasthanaIndex: d.index, octaveDiff: 0, symbol: d.symbol, name: d.name, stepIndex: 2, phase: 'avarohanam' },
+      { swarasthanaIndex: p.index, octaveDiff: 0, symbol: p.symbol, name: p.name, stepIndex: 3, phase: 'avarohanam' },
+      { swarasthanaIndex: m.index, octaveDiff: 0, symbol: m.symbol, name: m.name, stepIndex: 4, phase: 'avarohanam' },
+      { swarasthanaIndex: g.index, octaveDiff: 0, symbol: g.symbol, name: g.name, stepIndex: 5, phase: 'avarohanam' },
+      { swarasthanaIndex: r.index, octaveDiff: 0, symbol: r.symbol, name: r.name, stepIndex: 6, phase: 'avarohanam' },
+      { ...s0, stepIndex: 7, phase: 'avarohanam' },
+    ];
 
-  return { arohana, avarohana };
+    return { arohana, avarohana };
+  }
+
+  // Fallback for any arbitrary scale with swaras array
+  if (raga.swaras && Array.isArray(raga.swaras) && raga.swaras.length > 0) {
+    const arohana = [
+      ...raga.swaras.map((sw, idx) => ({
+        swarasthanaIndex: sw.index,
+        octaveDiff: 0,
+        symbol: sw.symbol,
+        name: sw.name,
+        stepIndex: idx,
+        phase: 'arohanam',
+      })),
+      { ...sDot, stepIndex: raga.swaras.length, phase: 'arohanam' },
+    ];
+    const avarohana = [...arohana].reverse().map((sw, idx) => ({
+      ...sw,
+      stepIndex: idx,
+      phase: 'avarohanam',
+    }));
+    return { arohana, avarohana };
+  }
+
+  return { arohana: [], avarohana: [] };
 }
 
 /**

@@ -130,6 +130,7 @@ export const MELAKARTA_RAGAS = RAGA_NAMES.map((rInfo) => {
   const swarasthanaSet = new Set(swarasthanaIndices);
 
   const arohanaStr = `S ${chakra.r} ${chakra.g} ${mSymbol} P ${dn.d} ${dn.n} Ṡ`;
+  const avarohanaStr = `Ṡ ${dn.n} ${dn.d} P ${mSymbol} ${chakra.g} ${chakra.r} S`;
 
   return {
     number: num,
@@ -145,6 +146,9 @@ export const MELAKARTA_RAGAS = RAGA_NAMES.map((rInfo) => {
     swarasthanaIndices,
     swarasthanaSet,
     arohana: arohanaStr,
+    arohanaStr,
+    avarohanaStr,
+    isJanya: false,
   };
 });
 

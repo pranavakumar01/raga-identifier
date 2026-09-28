@@ -25,7 +25,7 @@ export default function Readout({ hz, clarity, rms, listening, tonicHz, targetRa
   const swara = voiced && tonicHz ? hzToSwara(hz, tonicHz) : null;
 
   const targetSwara =
-    targetRaga && swara
+    targetRaga?.swaras && swara
       ? targetRaga.swaras.find((s) => s.index === swara.swarasthanaIndex)
       : null;
   const isTargetNote = !!targetSwara;
